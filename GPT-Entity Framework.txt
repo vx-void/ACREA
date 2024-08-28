@@ -1,0 +1,133 @@
+using System;
+using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
+using System.IO;
+
+public class RepairServiceContext : DbContext
+{
+    public RepairServiceContext() : base("name=RepairServiceContext")
+    {
+    }
+
+    public DbSet<Client> Clients { get; set; }
+    public DbSet<ComponentType> ComponentTypes { get; set; }
+    public DbSet<Component> Components { get; set; }
+    public DbSet<Order> Orders { get; set; }
+    public DbSet<ComponentOrder> ComponentOrders { get; set; }
+
+    protected override void OnModelCreating(DbModelBuilder modelBuilder)
+    {
+        // Настройки модели
+        modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+
+        // Конфигурация сущностей
+        modelBuilder.Entity<Client>()
+            .HasKey(c => c.Phone)
+            .Property(c => c.Phone)
+            .HasColumnType("INTEGER")
+            .IsRequired()
+            .IsUnique();
+
+        modelBuilder.Entity<ComponentType>()
+            .HasKey(ct => ct.Id);
+
+        modelBuilder.Entity<Component>()
+            .HasKey(c => c.Id)
+            .HasRequired(c => c.ComponentType)
+            .WithMany()
+            .HasForeignKey(c => c.Type);
+
+        modelBuilder.Entity<Order>()
+            .HasKey(o => o.Id)
+            .HasRequired(o => o.Client)
+            .WithMany()
+            .HasForeignKey(o => o.ClientPhone);
+
+        modelBuilder.Entity<ComponentOrder>()
+            .HasKey(co => new { co.OrderId, co.ComponentId })
+            .HasRequired(co => co.Order)
+            .WithMany(o => o.ComponentOrders)
+            .HasForeignKey(co => co.OrderId);
+
+        modelBuilder.Entity<ComponentOrder>()
+            .HasRequired(co => co.Component)
+            .WithMany()
+            .HasForeignKey(co => co.ComponentId);
+    }
+}
+
+public class Client
+{
+    public int Phone { get; set; }
+    public string Name { get; set; }
+}
+
+public class ComponentType
+{
+    public int Id { get; set; }
+    public string Type { get; set; }
+}
+
+public class Component
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public int Type { get; set; }
+    public int Count { get; set; }
+    public double Price { get; set; }
+
+    public virtual ComponentType ComponentType { get; set; }
+}
+
+public class Order
+{
+    public int Id { get; set; }
+    public double DateStart { get; set; }
+    public double? DateDeadline { get; set; }
+    public int ClientPhone { get; set; }
+    public string Device { get; set; }
+    public int Status { get; set; }
+    public double? Price { get; set; }
+
+    public virtual Client Client { get; set; }
+    public virtual ICollection<ComponentOrder> ComponentOrders { get; set; }
+}
+
+public class ComponentOrder
+{
+    public int OrderId { get; set; }
+    public int ComponentId { get; set; }
+    public int Count { get; set; }
+
+    public virtual Order Order { get; set; }
+    public virtual Component Component { get; set; }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Путь к файлу базы данных
+        string databaseFile = "repair_service.db";
+
+        // Создаем или подключаемся к базе данных
+        using (var context = new RepairServiceContext())
+        {
+            // Проверяем, существует ли файл базы данных
+            if (!File.Exists(databaseFile))
+            {
+                Console.WriteLine("База данных не найдена. Создаем новую...");
+
+                // Создаем новый файл базы данных
+                context.Database.Create();
+            }
+            else
+            {
+                Console.WriteLine("База данных найдена.");
+            }
+
+            // Здесь можно выполнять операции с базой данных
+            // ...
+        }
+    }
+}
