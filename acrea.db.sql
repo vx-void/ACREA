@@ -1,0 +1,43 @@
+BEGIN TRANSACTION;
+CREATE TABLE IF NOT EXISTS "Client" (
+	"phone"	INTEGER NOT NULL UNIQUE,
+	"name"	TEXT NOT NULL,
+	PRIMARY KEY("phone")
+);
+CREATE TABLE IF NOT EXISTS "Component" (
+	"id"	INTEGER NOT NULL,
+	"name"	TEXT NOT NULL UNIQUE,
+	"type"	INTEGER NOT NULL,
+	"count"	INTEGER NOT NULL,
+	"price"	REAL NOT NULL,
+	PRIMARY KEY("id" AUTOINCREMENT),
+	FOREIGN KEY("type") REFERENCES "ComponentType"("id")
+);
+CREATE TABLE IF NOT EXISTS "ComponentOrder" (
+	"order"	INTEGER NOT NULL,
+	"component"	INTEGER NOT NULL,
+	"count"	INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS "ComponentType" (
+	"id"	INTEGER NOT NULL,
+	"type"	TEXT,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
+CREATE TABLE IF NOT EXISTS "Order" (
+	"id"	INTEGER NOT NULL,
+	"dateStart"	REAL NOT NULL,
+	"date_deadline"	REAL,
+	"client"	INTEGER NOT NULL,
+	"device"	TEXT NOT NULL,
+	"status"	INTEGER NOT NULL,
+	"price"	REAL,
+	PRIMARY KEY("id" AUTOINCREMENT),
+	FOREIGN KEY("client") REFERENCES "Client"("phone"),
+	FOREIGN KEY("status") REFERENCES "Status"("id")
+);
+CREATE TABLE IF NOT EXISTS "Status" (
+	"id"	INTEGER NOT NULL,
+	"status"	TEXT NOT NULL,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
+COMMIT;

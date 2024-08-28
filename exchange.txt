@@ -1,0 +1,90 @@
+using System;
+using System.Data.SQLite;
+using System.IO;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Путь к файлу базы данных
+        string databaseFile = "repair_service.db";
+
+        // Строка подключения к базе данных
+        string connectionString = $"Data Source={databaseFile};";
+
+        // Проверяем, существует ли файл базы данных
+        if (!File.Exists(databaseFile))
+        {
+            Console.WriteLine("База данных не найдена. Создаем новую...");
+
+            // Создаем новый файл базы данных
+            SQLiteConnection.CreateFile(databaseFile);
+
+            // Создаем таблицы
+            CreateTables(connectionString);
+        }
+        else
+        {
+            Console.WriteLine("База данных найдена.");
+        }
+
+        // Здесь можно продолжить работу с базой данных
+        // ...
+    }
+
+    static void CreateTables(string connectionString)
+    {
+        using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+        {
+            connection.Open();
+
+            // Начинаем транзакцию
+            using (SQLiteTransaction transaction = connection.BeginTransaction())
+            {
+                // Создаем таблицу "Client"
+                using (SQLiteCommand command = new SQLiteCommand(@"
+                    CREATE TABLE IF NOT EXISTS ""Client"" (
+                        ""phone"" INTEGER NOT NULL UNIQUE,
+                        ""name"" TEXT NOT NULL,
+                        PRIMARY KEY(""phone"")
+                    )", connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+
+                // Создаем таблицу "ComponentType"
+                using (SQLiteCommand command = new SQLiteCommand(@"
+                    CREATE TABLE IF NOT EXISTS ""ComponentType"" (
+                        ""id"" INTEGER NOT NULL,
+                        ""type"" TEXT,
+                        PRIMARY KEY(""id"" AUTOINCREMENT)
+                    )", connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+
+                // Создаем таблицу "Component"
+                using (SQLiteCommand command = new SQLiteCommand(@"
+                    CREATE TABLE IF NOT EXISTS ""Component"" (
+                        ""id"" INTEGER NOT NULL,
+                        ""name"" TEXT NOT NULL UNIQUE,
+                        ""type"" INTEGER NOT NULL,
+                        ""count"" INTEGER NOT NULL,
+                        ""price"" REAL NOT NULL,
+                        PRIMARY KEY(""id"" AUTOINCREMENT),
+                        FOREIGN KEY(""type"") REFERENCES ""ComponentType""(""id"")
+                    )", connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+
+                // Создаем другие таблицы...
+
+                // Завершаем транзакцию
+                transaction.Commit();
+            }
+        }
+
+        Console.WriteLine("Таблицы успешно созданы.");
+    }
+}
