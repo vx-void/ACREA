@@ -15,7 +15,7 @@ namespace ACREA
         static void Main()
         {
             Model.DbIsExist();
-           
+            
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Main());

@@ -31,60 +31,60 @@ namespace ACREA
         private void Part_Load(object sender, EventArgs e)
         {
             
-            partType = Model.GetPartTypeDict(DB.DataBase.GetPartTypeList());
-            componentTypeComboBox.DataSource = new BindingSource(partType, null);
-            componentTypeComboBox.DisplayMember = "Value";
-            componentTypeComboBox.ValueMember = "Key";
-            componentTypeComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            //partType = Model.GetPartTypeDict(DB.DataBase.GetPartTypeList());
+            //componentTypeComboBox.DataSource = new BindingSource(partType, null);
+            //componentTypeComboBox.DisplayMember = "Value";
+            //componentTypeComboBox.ValueMember = "Key";
+            //componentTypeComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
 
-            if (ComponentPart != null)
-            {                
-                componentTypeComboBox.Text = partType[ComponentPart.GetTypeID()];
-                textBox1.Text = ComponentPart.GetName();
-                textBox2.Text = ComponentPart.GetQuantity().ToString();
-                textBox4.Text = ComponentPart.GetPrice().ToString();
-                oldPart = GetOldComponentPart();
-            }
+            //if (ComponentPart != null)
+            //{                
+            //    componentTypeComboBox.Text = partType[ComponentPart.GetTypeID()];
+            //    textBox1.Text = ComponentPart.GetName();
+            //    textBox2.Text = ComponentPart.GetQuantity().ToString();
+            //    textBox4.Text = ComponentPart.GetPrice().ToString();
+            //    oldPart = GetOldComponentPart();
+            //}
             
         }
 
         private void actionButton_Click(object sender, EventArgs e)
         {
-            if (!ValidateInputs(out int quantity, out double price))
-                return;
+            //if (!ValidateInputs(out int quantity, out double price))
+            //    return;
 
-            var newPart = new ComponentPart
-            {
-                Name = textBox1.Text,
-                Quantity = quantity,
-                Price = price,
-                PType = DB.DataBase.GetPartType(componentTypeComboBox.Text)
-            };
+            //var newPart = new ComponentPart
+            //{
+            //    Name = textBox1.Text,
+            //    Quantity = quantity,
+            //    Price = price,
+            //    PType = DB.DataBase.GetPartType(componentTypeComboBox.Text)
+            //};
 
             switch (actionButton.Text)
             {
                 case "Добавить":
-                    DB.DataBase.InsertPart(newPart);
+                    //DB.DataBase.InsertPart(newPart);
                     break;
                 case "Редактировать":
-                    DB.DataBase.UpdatePart(oldPart, newPart);
+                    //DB.DataBase.UpdatePart(oldPart, newPart);
                     break;
             }
 
             this.Close();
         }
 
-        private ComponentPart GetOldComponentPart()
-        {
+        //private ComponentPart GetOldComponentPart()
+        //{
 
-            return new ComponentPart
-            {
-                Name = textBox1.Text,
-                Quantity = Convert.ToInt32(textBox2.Text),
-                Price = Convert.ToDouble(textBox4.Text),
-                PType = DB.DataBase.GetPartType(componentTypeComboBox.Text)
-            };
-        }
+        //    return new ComponentPart;
+        //    ////{
+        //    ////    Name = textBox1.Text,
+        //    ////    Quantity = Convert.ToInt32(textBox2.Text),
+        //    ////    Price = Convert.ToDouble(textBox4.Text),
+        //    ////    PType = DB.DataBase.GetPartType(componentTypeComboBox.Text)
+        //    //};
+        //}
 
         private bool ValidateInputs(out int quantity, out double price)
         {
