@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComponentPart.cs" />
+    <Compile Include="DB.Entity.cs" />
     <Compile Include="DB.cs" />
     <Compile Include="Components.cs">
       <SubType>Form</SubType>

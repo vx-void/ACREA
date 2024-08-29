@@ -13,6 +13,9 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Web;
+using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Security.Cryptography.X509Certificates;
 
 namespace DB
 {
@@ -195,6 +198,16 @@ namespace DB
                 }
             }
         }
+    }
+
+
+    public class AcreaContext : DbContext
+    {
+        public AcreaContext() : base("name=AcreaContext") 
+        {
+        }
+
+        public DbSet<Clients> Client
     }
 }
     

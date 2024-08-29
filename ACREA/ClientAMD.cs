@@ -45,12 +45,12 @@ namespace ACREA
                 case "Создать":
                     this.ClientName = nameTextBox.Text.ToString();
                     this.Phone = phoneTextBox.Text.ToString();
-                    DB.DataBase.InsertClient(ClientName, Phone);
+                    //DB.DataBase.InsertClient(ClientName, Phone);
                     break;
                 case "Редактировать":
                     var result = MessageBox.Show("Редактировать информацию о клиенте?", "Информация о клиенте", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                    if (result == DialogResult.Yes)
-                        DB.DataBase.UpdateClient(nameTextBox.Text.ToString(), phoneTextBox.Text.ToString(), ClientName.ToString(), Phone.ToString());
+                    //if (result == DialogResult.Yes)
+                    //    DB.DataBase.UpdateClient(nameTextBox.Text.ToString(), phoneTextBox.Text.ToString(), ClientName.ToString(), Phone.ToString());
                     break;
 
             }
