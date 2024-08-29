@@ -207,7 +207,7 @@ namespace DB
             using (var context = new AcreaContext())
             {
                     Database.SetInitializer(new CreateDatabaseIfNotExists<AcreaContext>());
-                    context.Database.Initialize(true);
+                    context.Database.Initialize(false);
             }
      
         }
