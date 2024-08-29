@@ -12,7 +12,6 @@ using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Windows.Forms;
 
 
-
 namespace DB
 {
     //public static class DataBase
@@ -197,37 +196,25 @@ namespace DB
     //}
 
 
+
     public static class DataBaseContext
     {
         public static void CreateDB(string dbPath)
         {
             if (!File.Exists(dbPath))
                 SQLiteConnection.CreateFile(dbPath);
-
-            using (var context = new AcreaContext())
+            Database.SetInitializer(new CreateDatabaseIfNotExists<AcreaContext>());
+            //
+            using (var context = new AcreaContext(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dbPath)))
             {
-                    Database.SetInitializer(new CreateDatabaseIfNotExists<AcreaContext>());
-                    context.Database.Initialize(true);
+                context.Database.Initialize(true);
             }
-     
         }
-
-        //static void CreateDataBaseStructure()
-        //{
-        //    using (var context = new AcreaContext())
-        //    { 
-        //        Database.SetInitializer(new CreateDatabaseIfNotExists<AcreaContext>());
-        //        context.Database.Initialize(true);
-        //    }
-        //}
-        
     }
-
-   
 
     public class AcreaContext : DbContext
     {
-        public AcreaContext() : base("name=AcreaContext") 
+        public AcreaContext(string connectionString) : base(connectionString)
         {
         }
 
@@ -246,7 +233,7 @@ namespace DB
                 .Property(c => c.Id)
                 .HasColumnType("int")
                 .IsRequired();
-     
+
             modelBuilder.Entity<ComponentType>()
                 .HasKey(ct => ct.Id);
 
@@ -273,10 +260,9 @@ namespace DB
                 .WithMany()
                 .HasForeignKey(co => co.ComponentId);
         }
-
-      
     }
 }
+
 
     
 
