@@ -203,10 +203,9 @@ namespace DB
         {
             if (!File.Exists(dbPath))
                 SQLiteConnection.CreateFile(dbPath);
-
+            Database.SetInitializer(new CreateDatabaseIfNotExists<AcreaContext>());
             using (var context = new AcreaContext())
-            {
-                    Database.SetInitializer(new CreateDatabaseIfNotExists<AcreaContext>());
+            {   
                     context.Database.Initialize(true);
             }
      
