@@ -41,7 +41,7 @@ namespace DB
         public double? Price { get; set; }
 
         public virtual Client OClient { get; set; }
-        public virtual ICollection<ComponentOrder> ComponetOrders { get; set; }
+        public virtual ICollection<ComponentOrder> ComponentOrders { get; set; }
     }
 
     public class ComponentOrder

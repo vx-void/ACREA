@@ -17,6 +17,7 @@ using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Security.Cryptography.X509Certificates;
 
+
 namespace DB
 {
     public static class DataBase
@@ -207,9 +208,54 @@ namespace DB
         {
         }
 
-        public DbSet<Clients> Client
+        public DbSet<Client> Clients { get; set; }
+        public DbSet<ComponentType> ComponentTypes { get; set; }
+        public DbSet<Component> Components { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<ComponentOrder> ComponentOrders { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            // Настройки модели
+            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+
+            // Конфигурация сущностей
+            modelBuilder.Entity<Client>()
+                .HasKey(c => c.Phone)
+                .Property(c => c.Phone)
+                .HasColumnType("INTEGER")
+                .IsRequired()
+                .IsUnique();
+
+            modelBuilder.Entity<ComponentType>()
+                .HasKey(ct => ct.Id);
+
+            modelBuilder.Entity<Component>()
+                .HasKey(c => c.Id)
+                .HasRequired(c => c.CComponentType)
+                .WithMany()
+                .HasForeignKey(c => c.Type);
+
+            modelBuilder.Entity<Order>()
+                .HasKey(o => o.Id)
+                .HasRequired(o => o.Client)
+                .WithMany()
+                .HasForeignKey(o => o.Client);
+
+            modelBuilder.Entity<ComponentOrder>()
+                .HasKey(co => new { co.OrderId, co.ComponentId })
+                .HasRequired(co => co.Order)
+                .WithMany(o => o.ComponentOrders)
+                .HasForeignKey(co => co.OrderId);
+
+            modelBuilder.Entity<ComponentOrder>()
+                .HasRequired(co => co.Component)
+                .WithMany()
+                .HasForeignKey(co => co.ComponentId);
+        }
     }
 }
+
     
 
 
