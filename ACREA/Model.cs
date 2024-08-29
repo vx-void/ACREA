@@ -29,7 +29,7 @@ namespace ACREA
             //    return;
             //else
             //    //DataBase.CreateDataBase(GetStatusDict());
-            DataBaseContext.CreateDB("acrea.db");
+            DataBaseContext.CreateDB("acrea.db"); //&&&&
 
         }
         public static Dictionary<int, string> GetPartTypeDict(List<PartType> partTypes)
