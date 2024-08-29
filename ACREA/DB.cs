@@ -216,6 +216,7 @@ namespace DB
     {
         public AcreaContext(string connectionString) : base(connectionString)
         {
+            this.Database.Log = s => System.IO.File.AppendAllText("acrea-log.txt", s);
         }
 
         public DbSet<Client> Clients { get; set; }
