@@ -9,25 +9,14 @@
   </startup>
   <entityFramework>
     <providers>
-      <!-- Провайдер для Entity Framework 6 и SQLite -->
+      <provider invariantName="System.Data.SqlClient" type="System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer" />
       <provider invariantName="System.Data.SQLite.EF6" type="System.Data.SQLite.EF6.SQLiteProviderServices, System.Data.SQLite.EF6" />
     </providers>
   </entityFramework>
   <system.data>
     <DbProviderFactories>
-      <!-- Удаление предыдущих записей для обеспечения правильной конфигурации -->
-      <remove invariant="System.Data.SQLite" />
       <remove invariant="System.Data.SQLite.EF6" />
-      
-      <!-- Добавление провайдеров для SQLite -->
-      <add name="SQLite Data Provider" invariant="System.Data.SQLite" description=".NET Framework Data Provider for SQLite" type="System.Data.SQLite.SQLiteFactory, System.Data.SQLite" />
       <add name="SQLite Data Provider (Entity Framework 6)" invariant="System.Data.SQLite.EF6" description=".NET Framework Data Provider for SQLite (Entity Framework 6)" type="System.Data.SQLite.EF6.SQLiteProviderFactory, System.Data.SQLite.EF6" />
-    </DbProviderFactories>
+    <remove invariant="System.Data.SQLite" /><add name="SQLite Data Provider" invariant="System.Data.SQLite" description=".NET Framework Data Provider for SQLite" type="System.Data.SQLite.SQLiteFactory, System.Data.SQLite" /></DbProviderFactories>
   </system.data>
-  <connectionStrings>
-    <!-- Строка подключения для SQLite -->
-    <add name="AcreaContext"
-         connectionString="Data Source=acrea.db;"
-         providerName="System.Data.SQLite" />
-  </connectionStrings>
 </configuration>
